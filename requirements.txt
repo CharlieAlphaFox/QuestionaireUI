@@ -1,0 +1,11 @@
+aider-chat
+customtkinter
+gpt-engineer
+openpyxl
+pandas
+pillow
+pip-chill
+pyinstaller
+retrying
+tk
+xlsxwriter
