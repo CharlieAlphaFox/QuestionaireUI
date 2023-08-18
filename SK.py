@@ -25,27 +25,37 @@ questions = {}
 async def chatbot_answer(startup_name, responses, score):
     print('Sending request to OpenAI...')
     try:
-        api_endpoint = "https://api.openai.com/v1/engines/text-davinci-003/completions"
+        api_endpoint = "https://api.openai.com/v1/chat/completions"
         headers = {"Authorization": "Bearer sk-yourAPIkeysGoHereLikeThisOrWithImportedOs", 'Content-Type': 'application/json'}
 
         # Prepare a list of prompts for the AI.
         prompts = [f"{key}: {value['Response']}, Top Score Difference: {value['Score Difference']}" for key, value in responses.items() if value['Response']]
         prompts = '\n'.join(prompts)
 
-        txt1 = "You are an expert on Entrepreneurship with an impartial view and very opinionated on the recommendations about startups."
+        txt1 = "You are an expert on Entrepreneurship with an impartial view and very opinionated on the recommendations about startups." # persona
         txt2 = f"The responses to section: questions and difference from top score (the lower the better) about {startup_name} were as follows:\n{prompts}\n with a final score of {score} of 100\n"
         txt3 = "Please note the final score thresholdsare : <32: Not a good idea, 32-40: Might work but needs attention, 40-60: A good idea that needs work, 61-76 is great, >76: Excellent idea. To expand"
         txt4 = "Using your expertise, please generate a very comprehensive, well formated and lenghty report article per question, excluding the Info section, and based on the score difference: describing any threats, the startup potentials on how each area can be improved, scaled, delivered, optimized, " 
         txt5 = "the risks and the concrete next steps, the possible product phase innovation ideas and ramifications, as well as an overall conclusion, all based on your expertise and the score difference"
         
-        ttxt = txt1 + txt2 + txt3 + txt4 + txt5
+        ttxt = txt2 + txt3 + txt4 + txt5 # Excluding txt1 as its the persona
         data = {
-            "prompt":  ttxt,
-            "max_tokens": 2900,
+            "model": "gpt-4-0613",
+            "max_tokens": 2950,
             "temperature": 0.4,
             # "top_p": 1,
             "frequency_penalty": 1,
-        } 
+            "messages": [
+                {
+                    "role": "system",
+                    "content": txt1
+                },
+                {
+                    "role": "user",
+                    "content": ttxt
+                }
+            ],
+        }
         # https://beta.openai.com/docs/api-reference/completions/create
         # https://atoz.ai/articles/understanding-temperature-top-p-presence-penalty-and-frequency-penalty-in-language-models-like-gpt-3/
 
@@ -57,13 +67,18 @@ async def chatbot_answer(startup_name, responses, score):
         print(traceback.format_exc())
         print(e)
         response_json = response.json()
-        print(response_json['choices'][0]['text'].strip())
+        print(response_json.get('choices', [{}])[0].get('content', '').strip())
         return None
     
-    
-    response_json = response.json()
-    print(response_json['choices'][0]['text'].strip())
-    return response_json['choices'][0]['text'].strip()
+    try:
+        response_json = response.json()
+        response_content = response_json['choices'][0]['message']['content'].strip()
+        print(response_content)
+        return response_content
+    except Exception:
+        print("Error decoding JSON from response.")
+        print("Response:", response.text)
+        return None
 
 # Iterate over each data_row in the dataframe
 for index, data_row in data.iterrows():
