@@ -14,6 +14,8 @@ source venv_ds/bin/activate
 
 pip install -r requirements.txt
 
+API Keys needed for GPT-4 (Works best with openai keys for GPT-4)
+
 ## Program:
 A GUI with dropdown options and optional help button for each question:
 ![Sample](https://github.com/CharlieAlphaFox/QuestionaireUI/assets/50183852/fb335314-dc17-490c-94f1-8a3ce5480054)
