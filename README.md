@@ -6,10 +6,11 @@ it takes any Questionaire.csv file and as per the sample here, it creates an UI 
 Create your own Questionaire.csv file from the sample and modify the prompt to chat.ai API to anything that suits your use case. You can use any logo image you want to enhance the UI
 
 # Installation
-Create virtualenv and activate
+Download this code.
+Create a virtualenv and activate
 
 virtualenv venv_tk
-source venv_ds/bin/activate
+source venv_tk/bin/activate
 # Requirements
 
 pip install -r requirements.txt
@@ -17,8 +18,7 @@ pip install -r requirements.txt
 API Keys needed for GPT-4 (Works best with openai keys for GPT-4)
 
 ## Program:
-A GUI with dropdown options and optional help button for each question:
-![Sample](https://github.com/CharlieAlphaFox/QuestionaireUI/assets/50183852/fb335314-dc17-490c-94f1-8a3ce5480054)
+A GUI with dropdown options and optional help button for each question
 
 # Output
 Once the questions are answered the program rates them with a score from about -12 to 100 according to the sample weights in the CSV file and gives a final score.
